@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+    <title>Sample CRUD</title>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        app.con
+        app.controller('crudController', ['$scope', '$http', function($scope, $http) {
+            $scope.employees = [
+                {id: 1, name:"Steve Jobes", company:"Apple"},
+                {id: 2, name:"Larry Page", company:"Google"},
+                {id: 3, name:"Bill Gates", company:"Microsoft"},
+                {id: 4, name:"Larry Ellision", company:"Oracle"},
+                {id: 5, name:"Michel Dell", company:"Dell"},
+                {id: 6, name:"Amit Kumar Dey", company:"HCL"},
+                {id: 7, name:"Ashish Kumar Dey", company:"Niit"},
+            ];
+            $scope.isAddModeEnabled = false;
+            $scope.isEditModeEnabled = false;
+
+            $scope.onDeleteButtonClick = function(id) {
+                for (var i = 0; i < $scope.employees.length; i++) {
+                    if ($scope.employees[i].id == id) {
+                        $scope.employees.splice(i, 1);
+                    }
+                }
+            };
+
+            $scope.onEditButtonClick = function(employee) {
+                $scope.isEditModeEnabled = true;
+                $scope.employee = employee;
+            };
+
+            $scope.onAddButtonClick = function() {
+                $scope.isAddModeEnabled = true;
+                
+                $scope.employee = {
+                    id: $scope.employees.length + 1,
+                    name: "",
+                    company: ""
+                };
+            };
+
+            $scope.onSaveButtonClick = function(employee) {
+                $scope.employees.push(employee);
+                $scope.isAddModeEnabled = false; 
+            };
+
+            $scope.onSaveButtonClickForExistingEmployee = function() {
+                $scope.isEditModeEnabled = false;
+            }
+        }]);
+    </script>
+</head>
+<body ng-app="myApp">
+    <div ng-controller="crudController">
+        <h1>List of employees</h1>
+        <hr>
+        <table>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <tr ng-repeat="employee in employees">
+                <td>{{employee.name}}</td>
+                <td>{{employee.company}}</td>
+                <td><button ng-click="onEditButtonClick(employee)">Edit</button>
+                <td><button ng-click="onDeleteButtonClick(employee.id)">Delete</button>
+            </tr>
+        </table>
+
+        <hr>
+        <button ng-click="onAddButtonClick()">Add</button>
+        <hr>
+        <div ng-if="isAddModeEnabled">
+            Name: <input type="text" ng-model="employee.name">
+            <br>
+            Company <input type="text" ng-model="employee.company">
+            <br>
+            <button ng-click="onSaveButtonClick(employee)">Save</button>
+        </div>
+
+        <div ng-if="isEditModeEnabled">
+            Name: <input type="text" ng-model="employee.name">
+            <br>
+            Company <input type="text" ng-model="employee.company">
+            <br>
+            <button ng-click="onSaveButtonClickForExistingEmployee()">Save</button>
+        </div>
+    </div>
+</body>
+</html>
